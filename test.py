@@ -37,9 +37,9 @@ test = [
     ('./bcal', '-m', "5mb*5*5*5"),                                     # 7
     ('./bcal', '-m', "5 tb / 12"),                                     # 8
     ('./bcal', '-m', "2kb+3mb/4*5+5*56mb"),                            # 9
-    ('./bcal', '-m', "( 5 * 3) * (4 * 7 b)"),                          # 10
-    ('./bcal', '-m', "( 5 * 3 + 8) * (4 * 7 b)"),                      # 11
-    ('./bcal', '-m', "( 5 * (3 + 8 )) * (4 * 7 b )"),                  # 12
+    ('./bcal', '-m', "( 5 * 3) * (4 * 7 B)"),                          # 10
+    ('./bcal', '-m', "( 5 * 3 + 8) * (4 * 7 B)"),                      # 11
+    ('./bcal', '-m', "( 5 * (3 + 8 )) * (4 * 7 B )"),                  # 12
     ('./bcal', '-m', "( 5 ) * 2 mib"),                                 # 13
     ('./bcal', '-m', "3   mb -  2    mib"),                            # 14
     ('./bcal', '-m', "2mb-3mib"),                                      # 15
@@ -48,7 +48,7 @@ test = [
     ('./bcal', '-m', "2giB*2/2"),                                      # 18
     ('./bcal', '-m', "1miB / 4 kib"),                                  # 19
     ('./bcal', '-m', "(2giB*2)/2kib"),                                 # 20
-    ('./bcal', '-m', "1b / 0"),                                        # 21
+    ('./bcal', '-m', "1B / 0"),                                        # 21
     ('./bcal', '-m', "2qB*2"),                                         # 22
     ('./bcal', '-m', "((2giB)*2/2)"),                                  # 23
     ('./bcal', '-m', "((2giB)*(2/2)"),                                 # 24
@@ -56,11 +56,11 @@ test = [
     ('./bcal', '-m', "((2giB)*1)/(2/2)"),                              # 26
     ('./bcal', '-m', "(((2giB)*)2/2)"),                                # 27
     ('./bcal', '-m', "(2giB)*2*"),                                     # 28
-    ('./bcal', '-m', '0b11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', 'b'),  # 29
-    ('./bcal', '-m', '0xffffffffffffffffffffffffffffffff', 'b'),       # 30
-    ('./bcal', '-m', '340282366920938463463374607431768211455', 'b'),  # 31
-    ('./bcal', '-m', '0xffffffffffffffff', 'b'),                       # 32
-    ('./bcal', '-m', "2b / 3"),                                        # 33
+    ('./bcal', '-m', '0b11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', 'B'),  # 29
+    ('./bcal', '-m', '0xffffffffffffffffffffffffffffffff', 'B'),       # 30
+    ('./bcal', '-m', '340282366920938463463374607431768211455', 'B'),  # 31
+    ('./bcal', '-m', '0xffffffffffffffff', 'B'),                       # 32
+    ('./bcal', '-m', "2B / 3"),                                        # 33
     ('./bcal', '-m', "2 kIb/((3 ) )"),                                 # 34
     ('./bcal', '-m', "2 gIb/ - 3"),                                    # 35
     ('./bcal', '-m', "(2) kIb/((3))"),                                 # 36
@@ -95,11 +95,11 @@ test = [
     ('./bcal', '-m', "(2giB * 2) / (2kib >> 2)"),                      # 64
     ('./bcal', '-b', "9876543210.987654321 * 123456789.123456789"),    # 65
     ('./bcal', "4 + 3 - 2 + 10 * 5 / 2 + 7 - 6 + 9 - 10 / 5 * 2"),     # 66
-    ('./bcal', '-m', "4b + 3b - 2b + 10b * 5 / 2 + 7b - 6b + 9b - 10b / 5 * 2"),  # 67
+    ('./bcal', '-m', "4B + 3B - 2B + 10B * 5 / 2 + 7B - 6B + 9B - 10B / 5 * 2"),  # 67
     ('./bcal', '-m', "0xff / 0xf + 1337"),                             # 68
     ('./bcal', '-m', "(0xff giB * 2) / (2kib >> 2)"),                  # 69
     ('./bcal', '-m', "(2.2giB * 2) / (2.2kib >> 2)"),                  # 70
-    ('./bcal', '-m', "0xbb b * 2"),                                    # 71
+    ('./bcal', '-m', "0xbb B * 2"),                                    # 71
     ('./bcal', '-m', "0xbb * 2"),                                      # 72
     ('./bcal', '-b', "(50,000 - 2,000) * 1,500"),                      # 73
     ('./bcal', '-m', "5 & 3"),                                         # 74
@@ -113,18 +113,19 @@ test = [
     ('./bcal', '-b', "sum(1 2 3 4.5)"),                                # 82
     ('./bcal', '-b', "sum(1\n2\n3)"),                                 # 83
 
-    # unit arithmetic with space-separated units, including uppercase B and multi-char units
+    # unit arithmetic with space-separated byte units and multi-char units
     ('./bcal', '-m', "0x0D00000 B + 124 KiB"),                         # 84
-    ('./bcal', '-m', "0x0D00000 b + 124 KiB"),                         # 85
+    ('./bcal', '-m', "0x0D00000 b + 124 KiB"),                         # 85 - lowercase b is not a byte unit
     ('./bcal', '-m', "1 KiB + 1 KiB"),                                 # 86
     ('./bcal', '-m', "2 MiB + 512 KiB"),                               # 87
     ('./bcal', '-m', "1 GiB - 512 MiB"),                               # 88
-    ('./bcal', '-m', "0xFF B + 1 b"),                                  # 89
+    ('./bcal', '-m', "1 b"),                                            # 89 - lowercase b is not a byte unit
     # hex operand with uppercase B unit combined with compact hex+unit operand
     ('./bcal', '-m', "0x0D00000B B + 0x124tib"),                       # 90
     ('./bcal', '-m', "0x0D00000B B + 0x124kib"),                       # 91
     ('./bcal', '-m', "0x0D00000B B + 0x124mib"),                       # 92
     ('./bcal', '-m', "0x0D00000B B + 0x124gib"),                       # 93
+    ('./bcal', '-m', "1b"),                                            # 94 - lowercase b is not a byte unit
 ]
 
 res = [
@@ -216,16 +217,17 @@ res = [
 
     # unit arithmetic with space-separated units, including uppercase B and multi-char units
     b'13758464 B\n',                                 # 84
-    b'13758464 B\n',                                 # 85
+    b'ERROR: invalid token\n',                        # 85
     b'2048 B\n',                                     # 86
     b'2621440 B\n',                                  # 87
     b'536870912 B\n',                                # 88
-    b'256 B\n',                                      # 89
+    b'ERROR: invalid token\n',                        # 89
     # hex operand with uppercase B unit combined with compact hex+unit operand
     b'321057613414411 B\n',                          # 90
     b'218402827 B\n',                                # 91
     b'524288011 B\n',                                # 92
     b'313750716427 B\n',                             # 93
+    b'ERROR: unknown unit\n',                        # 94
 ]
 
 
@@ -383,9 +385,9 @@ repl_test_cases = [
     ('5*5*5*5     mIB', b'655360000 B\n'),                                   # 6
     ('5mb*5*5*5', b'625000000 B\n'),                                         # 7
     ('2kb+3mb/4*5+5*56mb', b'283752000 B\n'),                                # 9
-    ('( 5 * 3) * (4 * 7 b)', b'420 B\n'),                                    # 10
-    ('( 5 * 3 + 8) * (4 * 7 b)', b'644 B\n'),                                # 11
-    ('( 5 * (3 + 8 )) * (4 * 7 b )', b'1540 B\n'),                           # 12
+    ('( 5 * 3) * (4 * 7 B)', b'420 B\n'),                                    # 10
+    ('( 5 * 3 + 8) * (4 * 7 B)', b'644 B\n'),                                # 11
+    ('( 5 * (3 + 8 )) * (4 * 7 B )', b'1540 B\n'),                           # 12
     ('( 5 ) * 2 mib', b'10485760 B\n'),                                      # 13
     ('2giB*2/2', b'2147483648 B\n'),                                         # 18
     ('1miB / 4 kib', b'256\n'),                                              # 19
@@ -397,9 +399,9 @@ repl_test_cases = [
     ('2 >>> 2', b'ERROR: invalid sequence >>>\n'),                           # 61
     ('(2giB * 2) / (2kib >> 2)', b'8388608\n'),                              # 63
     ('4 + 3 - 2 + 10 * 5 / 2 + 7 - 6 + 9 - 10 / 5 * 2', b'36\n'),            # 65
-    ('4b + 3b - 2b + 10b * 5 / 2 + 7b - 6b + 9b - 10b / 5 * 2', b'36 B\n'),  # 66
+    ('4B + 3B - 2B + 10B * 5 / 2 + 7B - 6B + 9B - 10B / 5 * 2', b'36 B\n'),  # 66
     ('(2.2giB * 2) / (2.2kib >> 2)', b'8391587\n'),                          # 69 - returns in base format in REPL
-    ('0xbb b * 2', b'374 B\n'),                                              # 70
+    ('0xbb B * 2', b'374 B\n'),                                              # 70
     ('5 & 3', b'1\n'),                                                       # 73
     ('5 | 2', b'7\n'),                                                       # 74
     ('5 ^ 3', b'6\n'),                                                       # 75

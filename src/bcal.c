@@ -83,7 +83,7 @@ typedef struct {
 } settings;
 
 static char *VERSION = "2.5";
-static char *units[] = {"b", "kib", "mib", "gib", "tib", "kb", "mb", "gb", "tb"};
+static char *units[] = {"B", "kib", "mib", "gib", "tib", "kb", "mb", "gb", "tb"};
 static char *logarr[] = {"ERROR", "WARNING", "INFO", "DEBUG"};
 static const char *PROMPT_BYTES = "bytes> ";
 static const char *PROMPT_MATHS = "maths> ";
@@ -2241,14 +2241,14 @@ static void prompt_help()
 
 static void usage()
 {
-	printf("usage: bcal [-b [expr]] [-c N] [-p N] [-f loc]\n\
-	    [-s bytes] [expr] [N [unit]] [-m] [-H] [-d] [-h]\n\n\
+	printf("usage: bcal [-b [expr]] [-c N] [-p N] [-f loc] [-s bytes]\n\
+            [expr] [N [unit]] [-m] [-H] [-d] [-h]\n\n\
 Bits, bytes and general-purpose calculator.\n\n\
 positional arguments:\n\
  expr       expression in decimal/hex operands\n\
  N [unit]   capacity in B/KiB/MiB/GiB/TiB/kB/MB/GB/TB\n\
             https://en.wikipedia.org/wiki/Binary_prefix\n\
-            default unit is B (byte), case is ignored\n\
+            default unit is B, case is ignored for other units\n\
             N can be decimal or '0x' prefixed hex value\n\n\
 optional arguments:\n\
  -b [expr]  start in general-purpose REPL mode\n\
@@ -2278,6 +2278,11 @@ static int bstricmp(const char *s1, const char *s2)
 		++s2;
 	}
 	return *(const unsigned char *)s1 - *(const unsigned char *)s2;
+}
+
+static bool unit_matches(int index, const char *unit)
+{
+	return index == 0 ? !strcmp(units[index], unit) : !bstricmp(units[index], unit);
 }
 
 /* Convert any unit in bytes
@@ -2337,7 +2342,7 @@ parse_unit:
 
 	count = ARRAY_SIZE(units);
 	while (--count >= 0)
-		if (!bstricmp(units[count], punit))
+		if (unit_matches(count, punit))
 			break;
 
 	if (count == -1) {
@@ -2483,12 +2488,12 @@ static int infix2postfix(char *exp, queue **resf, queue **resr)
 				int unit_idx = ARRAY_SIZE(units);
 
 				while (--unit_idx >= 0)
-					if (!bstricmp(units[unit_idx], token))
+					if (unit_matches(unit_idx, token))
 						break;
 
 				if (unit_idx == 0) {
 					/*
-					 * Single byte unit 'b'/'B' after a number:
+					 * Single byte unit 'B' after a number:
 					 * mark as unit without appending the letter,
 					 * to avoid ambiguity with hex digits (0xDb).
 					 */
@@ -3095,7 +3100,7 @@ static int convertunit(char *value, char *unit, ulong sectorsz)
 
 		if (unitchars) {
 			while (--count >= 0)
-				if (!bstricmp(units[count], value + len))
+				if (unit_matches(count, value + len))
 					break;
 
 			if (count == -1) {
@@ -3110,7 +3115,7 @@ static int convertunit(char *value, char *unit, ulong sectorsz)
 		strstrip(unit);
 
 		while (--count >= 0)
-			if (!bstricmp(units[count], unit))
+			if (unit_matches(count, unit))
 				break;
 
 		if (count == -1) {

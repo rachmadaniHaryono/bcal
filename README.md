@@ -121,8 +121,8 @@ $ make strip install
 #### cmdline options
 
 ```
-usage: bcal [-b [expr]] [-c N] [-p N] [-f loc]
-            [-s bytes] [expr] [N [unit]] [-m] [-H] [-d] [-h]
+usage: bcal [-b [expr]] [-c N] [-p N] [-f loc] [-s bytes]
+            [expr] [N [unit]] [-m] [-H] [-d] [-h]
 
 Bits, bytes and general-purpose calculator.
 
@@ -130,38 +130,41 @@ positional arguments:
  expr       expression in decimal/hex operands
  N [unit]   capacity in B/KiB/MiB/GiB/TiB/kB/MB/GB/TB
             https://en.wikipedia.org/wiki/Binary_prefix
-            default unit is B (byte), case is ignored
+            default unit is B, case is ignored for other units
             N can be decimal or '0x' prefixed hex value
 
 optional arguments:
  -b [expr]  start in general-purpose REPL mode
             or, evaluate expression and quit
- -c N       show +ve integer N in binary, decimal, hex
- -p N       show bit position with bit value for N
+ -c N       convert N to binary, decimal, hex
+ -p N       print N as bit position/value pairs
  -f loc     convert CHS to LBA or LBA to CHS
             refer to the operational notes in man page
  -s bytes   sector size [default 512]
- -m         show minimal output (e.g. decimal bytes)
+ -m         minimal output (e.g. decimal bytes)
  -H         show integral maths results in hex
  -d         enable debug information and logs
  -h         show this help
 
 prompt keys:
  b          toggle general-purpose mode
- c N        show +ve integer N in binary, decimal, hex
- p N        show bit position with bit value for N
- r          show result from last operation
- s          show sizes of storage types
- ?          show prompt help
- q/double ↵ quit program
- prompt: bytes> for storage mode, maths> for general-purpose mode
+ c N        convert N to binary, decimal, hex
+ p N        print N as bit position/value pairs
+ r          result from last operation
+ s          sizes of storage types
+ ?          help
+ q/double ↵ quit
+
+ prompt:
+  bytes> for storage mode
+  maths> for general-purpose mode
 ```
 
 #### Operational notes
 
 - **REPL mode**: `bcal` enters the REPL mode if no arguments are provided. Storage unit conversion, base conversion and expression evaluation are supported in this mode. The last valid result is stored in the variable **r**.
 - **Expression**: Expression passed as argument in single execution mode must be quoted. Inner spaces are ignored. Operators supported in storage expressions: `+`, `-`, `*`, `/`, `%`.
-- **N [unit]**: `N` can be a decimal or '0x' prefixed hex value. `unit` can be B/KiB/MiB/GiB/TiB/kB/MB/GB/TB. Default is Byte. As all of these tokens are unique, `unit` is case-insensitive.
+- **N [unit]**: `N` can be a decimal or '0x' prefixed hex value. `unit` can be B/KiB/MiB/GiB/TiB/kB/MB/GB/TB. Default is Byte. `unit` is case-insensitive (except B).
 - **Numeric representation**: Decimal and hex are recognized in expressions and unit conversions. Binary is also recognized in other operations.
 - **Syntax**: Prefix hex inputs with `0x`, binary inputs with `0b`.
 - **Precision**: 128 bits if `__uint128_t` is available or 64 bits for numeric conversions. Floating point operations use `long double`. Negative values in storage expressions are unsupported. Only 64-bit operating systems are supported.
